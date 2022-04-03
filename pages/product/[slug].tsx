@@ -16,9 +16,12 @@ interface Props {
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
+
+	const [currentQuantity, setCurrentQuantity] = useState<number>(1)
+
 	const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
 		_id: product._id,
-		quantity: 1,
+		quantity: currentQuantity,
 		gender: product.gender,
 		image: product.images[0],
 		price: product.price,
@@ -34,8 +37,8 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 		})
 	};
 
-	const onChangeQuantity = (quantity: number): number => {
-		console.log(quantity)
+	const onAddProduct = () => {
+		console.log({tempCartProduct})
 	}
 
 	return (
@@ -59,7 +62,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 						{/* Cantidad */}
 						<Box sx={{ my: 2 }}>
 							<Typography variant="subtitle2">Cantidad</Typography>
-							<ItemCounter  onChangeQuantity={onChangeQuantity} quantity={tempCartProduct.quantity}/>
+							<ItemCounter  currentValue={currentQuantity} updatedQuantity={setCurrentQuantity} maxValue={product.inStock}/>
 							<SizeSelector
 								sizes={product.sizes}
 								selectedSize={tempCartProduct.size}
@@ -72,7 +75,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 						{product.inStock === 0 ? (
 							<Chip label="Sin Stock" color="error" variant="outlined" />
 						) : (
-							<Button color="secondary" className="circular-btn">
+							<Button color="secondary" className="circular-btn" onClick={onAddProduct}>
 								{tempCartProduct.size
 									? 'Agregar al carrito'
 									: 'Seleccione un talle'}
